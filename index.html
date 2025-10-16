@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #markdown-output {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            overflow: auto;
+        }
+        #loading {
+            display: none;
+            color: blue;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js/lib/highlight.js"></script>
+</head>
+<body>
+
+<h1>Markdown to HTML Converter</h1>
+<textarea id="markdown-input" placeholder="Paste your Markdown here..."></textarea>
+<button id="convert-button">Convert</button>
+<div id="loading">Processing...</div>
+<div id="markdown-output"></div>
+
+<script>
+    document.getElementById('convert-button').addEventListener('click', function() {
+        const input = document.getElementById('markdown-input').value;
+        const outputDiv = document.getElementById('markdown-output');
+        const loadingDiv = document.getElementById('loading');
+
+        // Show loading message
+        loadingDiv.style.display = 'block';
+        outputDiv.innerHTML = '';
+
+        try {
+            // Convert Markdown to HTML
+            const html = marked(input);
+            outputDiv.innerHTML = html;
+
+            // Highlight code blocks
+            hljs.highlightAll();
+
+            // Check if output contains an <h> tag
+            if (!outputDiv.innerHTML.includes("<h")) {
+                throw new Error("No heading found in the output.");
+            }
+        } catch (error) {
+            outputDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+        } finally {
+            // Hide loading message
+            loadingDiv.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>
